@@ -1,0 +1,26 @@
+{
+  "name": "fabricator",
+  "version": "0.0.0",
+  "description": "Create collections of constructable instances from strings, arrays or objects",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bigpipe/fabricator.git"
+  },
+  "keywords": [
+    "Constructor",
+    "string",
+    "array",
+    "object",
+    "helper"
+  ],
+  "author": "Martijn Swaagman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bigpipe/fabricator/issues"
+  },
+  "homepage": "https://github.com/bigpipe/fabricator"
+}
