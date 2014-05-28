@@ -3,7 +3,6 @@
 var path = require('path')
   , fs = require('fs');
 
-
 /**
  * Expose small fabrication helper. Provide an optional callback to run the method
  * asynchronously.
@@ -21,7 +20,14 @@ module.exports = function fabricator(stack, done) {
   fabricate(type, stack, done);
 };
 
-
+/**
+ * Synchronous discovery of constructable entities.
+ *
+ * @param {String} type Typeof stack
+ * @param {Mixed} stack
+ * @return {Array} filtered collection of constructable entities
+ * @api private
+ */
 function fabricateSync(type, stack) {
   switch (type) {
     case 'string':
@@ -59,12 +65,15 @@ function fabricate() {
   // TODO implement
 }
 
-//
-// Make sure we only use valid JavaScript files as sources. We want to
-// ignore stuff like potential .log files. Also allow constructors.
-// If there's no extension name we assume that it's a folder with an
-// `index.js` file.
-//
+/**
+ * Make sure only valid JavaScript files are used as source. Ignore other files,
+ * like .log files. Also allow constructors. If there's no extension assume that
+ * it's a folder with an `index.js` file.
+ *
+ * @param {String|Function} file Path or constructor function.
+ * @returns {Boolean} allow entity to be used or not.
+ * @api private
+ */
 function allowed(file) {
   var extname = path.extname(file)
     , type = typeof file;
