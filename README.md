@@ -1,8 +1,8 @@
 # Fabricator
 
-Create collections of constructable instances from strings, arrays or objects.
-Fabricator is a small helper module which does nothing else but detecting
-constructable JS entities. Strings are resolved as file paths.
+Discover collections of constructable instances from strings (filepaths),
+arrays or objects. Fabricator is a small helper module which does nothing
+else but detecting constructable JS entities. Strings are resolved as filepaths.
 
 The module exposes a factory function which can be provided with an optional
 completion callback. Providing the callback will make the discovery asynchronous.

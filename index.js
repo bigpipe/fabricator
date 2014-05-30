@@ -21,11 +21,11 @@ module.exports = function fabricator(stack, done) {
 };
 
 /**
- * Synchronous discovery of constructable entities.
+ * Synchronous discover constructable entities.
  *
- * @param {String} type Typeof stack
+ * @param {String} type Typeof stack.
  * @param {Mixed} stack
- * @return {Array} filtered collection of constructable entities
+ * @return {Array} filtered collection of constructable entities.
  * @api private
  */
 function fabricateSync(type, stack) {
@@ -47,18 +47,19 @@ function fabricateSync(type, stack) {
 }
 
 /**
- * [fabricate description]
- * @param  {[type]}   type  [description]
- * @param  {[type]}   stack [description]
- * @param  {Function} done  [description]
- * @return {[type]}         [description]
+ * Asynchronously discover constructable entities.
+ *
+ * @param {String} type Typeof stack.
+ * @param {Mixed} stack
+ * @param {Function} done Completion callback.
+ * @api private
  */
 function fabricate(type, stack, done) {
   var result = [];
 
   switch (type) {
     case 'string':
-      readSync(stack, done);
+      read(stack, done);
     break;
 
     case 'object':
@@ -70,7 +71,7 @@ function fabricate(type, stack, done) {
     break;
 
     case 'array':
-      Object.keys(stack).reduce(iterator(
+      stack.reduce(iterator(
         read,
         null,
         recur(stack.length, result, done)
@@ -82,13 +83,23 @@ function fabricate(type, stack, done) {
 /**
  * Read directory and initialize javascript files.
  *
- * @param {String} dir Full directory path.
+ * @param {String} filepath Full directory path.
  * @return {Array} collection of constructors
  * @api private
  */
-function readSync(dir) {
-  return fs.readdirSync(dir).map(function locate(file) {
-    file = path.resolve(dir, file);
+function readSync(filepath) {
+  //
+  // Check if the provided string is a JS file.
+  //
+  if (js(filepath)) return [
+    init(filepath, path.basename(filepath, '.js'))
+  ];
+
+  //
+  // Read the directory synchronous, only process files.
+  //
+  return fs.readdirSync(filepath).map(function locate(file) {
+    file = path.resolve(filepath, file);
 
     //
     // Only allow JS files, init determines if it is a constructable instance.
@@ -101,22 +112,29 @@ function readSync(dir) {
 /**
  * Asynchronous read directory and initialize javascript files.
  *
- * @param {String} dir Full directory path.
+ * @param {String} filepath Full directory path.
  * @param {done}
  * @api privat
  */
-function read(dir, done) {
+function read(filepath, done) {
   var iterate;
+
+  //
+  // Check if the provided string is a JS file.
+  //
+  if (js(filepath)) return done(null, [
+    init(filepath, path.basename(filepath, '.js'))
+  ]);
 
   //
   // Read the directory asynchronous, only process files.
   //
-  fs.readdir(dir, function readDir(error, files) {
+  fs.readdir(filepath, function readfilepath(error, files) {
     if (error) return done(error);
 
     iterate = recur(files.length, [], done);
     files.forEach(function map(file) {
-      file = path.resolve(dir, file);
+      file = path.resolve(filepath, file);
 
       if (!js(file)) return iterate();
       fs.stat(file, function details(error, stat) {
@@ -144,9 +162,10 @@ function iterator(traverse, obj, done) {
     //
     // Run traverse function async, callback was provided, traverse will init.
     //
-    if (nojs && done) return traverse(base, function run(error, files) {
-      done(null, stack.concat(files));
-    });
+    if ('function' === typeof done) {
+      if (nojs) return traverse(base, done);
+      return done(null, init(base, entity));
+    }
 
     //
     // Run the sync functions, traverse will handle init.
@@ -188,7 +207,7 @@ function js(file) {
   var extname = path.extname(file)
     , type = typeof file;
 
-  return 'string' === type && extname === '.js' || 'function' === type;
+  return 'function' === type || 'string' === type && extname === '.js';
 }
 
 /**
@@ -207,10 +226,12 @@ function init(constructor, name) {
   if (!constructor.prototype) return false;
 
   //
-  // Set the provided name on the prototype if required.
+  // Sets the lowercase name on the prototype if required.
   //
   if ('name' in constructor.prototype) {
-    constructor.prototype.name = constructor.prototype.name || name || constructor.name;
+    constructor.prototype.name = (
+      constructor.prototype.name || name || constructor.name
+    ).toLowerCase();
   }
 
   return constructor;
