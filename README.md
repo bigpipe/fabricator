@@ -11,7 +11,10 @@ else but detecting constructable JS entities. Strings are resolved as filepaths.
 The module exposes a factory function which can be provided with an optional
 completion callback. Providing the callback will make the discovery asynchronous.
 
-The [BigPipe] project is using the fabricator to find Pages and/or Pagelets
+The [BigPipe] project is using the fabricator to find Pages and/or Pagelets. This
+gives developers using BigPipe more flexibility. For example, you don't have to
+worry about adding each Page constructor to BigPipe, simply provide the directory
+they reside in.
 
 ### Installation
 
@@ -23,8 +26,11 @@ npm install fabricator --save
 
 ```js
 var fabricator = require('fabricator')
-  , path = './path/to/pagelet/directory';
-  , obj = { status: require('./npm-status-pagelet') }
+  , path = './path/to/directory/with/constructables';
+  , obj = {
+      status: require('./npm-status-pagelet'),
+      extended: __dirname + '/i/can/be/a/path/to/a/constructor.js'
+    }
 
 //
 // Discover constructors synchronously.
@@ -41,7 +47,7 @@ fabricator(path, function fabricate(error, results) {
 
 ### Tests
 
-Make sure devDependencies are installed and run the tests via:
+Make sure devDependencies are installed, after run the tests via:
 
 ```js
 npm test

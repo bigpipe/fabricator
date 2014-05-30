@@ -1,6 +1,6 @@
 {
   "name": "fabricator",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Discover collections of constructable instances from strings (filepaths), arrays or objects",
   "main": "index.js",
   "scripts": {
