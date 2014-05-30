@@ -1,6 +1,6 @@
 {
   "name": "fabricator",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Create collections of constructable instances from strings, arrays or objects",
   "main": "index.js",
   "scripts": {
