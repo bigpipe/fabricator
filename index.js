@@ -104,7 +104,7 @@ function readSync(filepath) {
     //
     // Only allow JS files, init determines if it is a constructable instance.
     //
-    if (!fs.statSync(file).isFile() || !js(file)) return false;
+    if (!fs.statSync(file).isFile() || !js(file)) return;
     return init(file, path.basename(file, '.js'));
   });
 }
