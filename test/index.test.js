@@ -9,95 +9,47 @@ describe('Fabricator', function () {
     assume(fabricator).to.be.a('function');
   });
 
-  it('can be called (a)synchronous and returns an array', function (done) {
+  it('always returns an array', function () {
     var result = fabricator(fixtures.array);
 
     assume(result).to.be.an('array');
     assume(result.length).to.equal(2);
-
-    fabricator(fixtures.array, function (error, result) {
-      assume(error).to.equal(null);
-      assume(result).to.be.an('array');
-      assume(result.length).to.equal(2);
-
-      done();
-    });
   });
 
-  it('can init constructors from file paths', function (done) {
+  it('can init constructors from file paths', function () {
     var result = fabricator(fixtures.string);
 
     assume(result).to.be.an('array');
     assume(result.length).to.equal(1);
-
-    fabricator(fixtures.string, function (error, result) {
-      assume(error).to.equal(null);
-      assume(result).to.be.an('array');
-      assume(result.length).to.equal(1);
-
-      done();
-    });
   });
 
-  it('will discover constructors in subdirectories and ignore other JS files', function (done) {
+  it('will discover constructors in subdirectories and ignore other JS files', function () {
     var result = fabricator(fixtures.directory);
 
     assume(result).to.be.an('array');
     assume(result.length).to.equal(1);
-
-    fabricator(fixtures.directory, function (error, result) {
-      assume(error).to.equal(null);
-      assume(result).to.be.an('array');
-      assume(result.length).to.equal(1);
-
-      done();
-    });
   });
 
-  it('can be provided with a absolute source path to resolve filepaths', function (done) {
+  it('can be provided with a absolute source path to resolve filepaths', function () {
     var path = __dirname + '/fixtures'
       , result = fabricator(fixtures.relative, path);
 
     assume(result).to.be.an('array');
     assume(result.length).to.equal(1);
-
-    fabricator(fixtures.relative, path, function (error, result) {
-      assume(error).to.equal(null);
-      assume(result).to.be.an('array');
-      assume(result.length).to.equal(1);
-
-      done();
-    });
   });
 
-  it('will discover constructors from objects', function (done) {
+  it('will discover constructors from objects', function () {
     var result = fabricator(fixtures.object);
 
     assume(result).to.be.an('array');
     assume(result.length).to.equal(3);
-
-    fabricator(fixtures.object, function (error, result) {
-      assume(error).to.equal(null);
-      assume(result).to.be.an('array');
-      assume(result.length).to.equal(3);
-
-      done();
-    });
   });
 
-  it('will discover constructors from arrays', function (done) {
+  it('will discover constructors from arrays', function () {
     var result = fabricator(fixtures.array);
 
     assume(result).to.be.an('array');
     assume(result.length).to.equal(2);
-
-    fabricator(fixtures.array, function (error, result) {
-      assume(error).to.equal(null);
-      assume(result).to.be.an('array');
-      assume(result.length).to.equal(2);
-
-      done();
-    });
   });
 
   it('sets prototype.name to lowercase object key if prototype.name is falsy', function () {
