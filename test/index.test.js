@@ -13,7 +13,7 @@ describe('Fabricator', function () {
     var result = fabricator(fixtures.array);
 
     assume(result).to.be.an('array');
-    assume(result.length).to.equal(2);
+    assume(result.length).to.equal(3);
   });
 
   it('can init constructors from file paths', function () {
@@ -27,12 +27,20 @@ describe('Fabricator', function () {
     var result = fabricator(fixtures.directory);
 
     assume(result).to.be.an('array');
-    assume(result.length).to.equal(1);
+    assume(result.length).to.equal(2);
   });
 
   it('can be provided with a absolute source path to resolve filepaths', function () {
     var path = __dirname + '/fixtures'
-      , result = fabricator(fixtures.relative, path);
+      , result = fabricator(fixtures.relative, { source: path });
+
+    assume(result).to.be.an('array');
+    assume(result.length).to.equal(2);
+  });
+
+  it('can be prevented from recursing a directory', function () {
+    var path = __dirname + '/fixtures'
+      , result = fabricator(fixtures.directory, { recursive: false });
 
     assume(result).to.be.an('array');
     assume(result.length).to.equal(1);
@@ -49,7 +57,7 @@ describe('Fabricator', function () {
     var result = fabricator(fixtures.array);
 
     assume(result).to.be.an('array');
-    assume(result.length).to.equal(2);
+    assume(result.length).to.equal(3);
   });
 
   it('sets prototype.name to lowercase object key if prototype.name is falsy', function () {

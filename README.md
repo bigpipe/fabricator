@@ -8,9 +8,6 @@ Discover collections of constructible instances from strings (filepaths),
 arrays or objects. Fabricator is a small helper module which does nothing
 else but detecting constructible JS entities. Strings are resolved as filepaths.
 
-The module exposes a factory function which can be provided with an optional
-completion callback. Providing the callback will make the discovery asynchronous.
-
 The [BigPipe] project is using the fabricator to find Pages and/or Pagelets. This
 gives developers using BigPipe more flexibility. For example, you don't have to
 worry about adding each Page constructor to BigPipe, simply provide the directory
@@ -33,16 +30,9 @@ var fabricator = require('fabricator')
     }
 
 //
-// Discover constructors synchronously.
+// Discover constructors.
 //
 var stack = fabricator(obj);
-
-//
-// Similar to above but asynchronously.
-//
-fabricator(path, function fabricate(error, results) {
-  console.log(results);
-});
 ```
 
 ### Tests

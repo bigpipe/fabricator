@@ -4,45 +4,46 @@ var path = require('path')
   , fs = require('fs');
 
 /**
- * Expose small fabrication helper. Provide an optional callback to run the method
- * asynchronously.
+ * Expose small fabrication helper.
  *
  * @param {Mixed} stack String, array or object that contains constructible entities
- * @param {String} source Optional absolute path to be used to resolve filepaths
- * @return {Array} collection of constructors, if called synchronously.
+ * @param {Object} options
+ *
+ * Possible options
+ *  - source:    {String}   Absolute path to be used to resolve filepaths
+ *  - recursive: {Boolean}  Should file paths be recursively discovered
+ *
+ * @returns {Array} collection of constructors.
  * @api public
  */
-module.exports = function fabricator(stack, source) {
+module.exports = function fabricator(stack, options) {
   var type = typeof stack;
   if ('object' === type && Array.isArray(stack)) type = 'array';
 
-  //
-  // Call the fabricate function (a)synchronously.
-  //
-  return fabricate(type, stack, source);
+  return fabricate(type, stack, options || {});
 };
 
 /**
- * Synchronous discover constructible entities.
+ * Discover constructible entities.
  *
  * @param {String} type Typeof stack.
  * @param {Mixed} stack
- * @param {String} source Optional absolute path to be used to resolve filepaths
+ * @param {Object} options
  * @return {Array} filtered collection of constructible entities.
  * @api private
  */
-function fabricate(type, stack, source) {
+function fabricate(type, stack, options) {
   switch (type) {
     case 'string':
-      stack = readSync(stack, source);
+      stack = read(stack, options);
     break;
 
     case 'object':
-      stack = Object.keys(stack).reduce(iterator(readSync, stack, source), []);
+      stack = Object.keys(stack).reduce(iterator(read, stack, options), []);
     break;
 
     case 'array':
-      stack = stack.reduce(iterator(readSync, source), []);
+      stack = stack.reduce(iterator(read, null, options), []);
     break;
   }
 
@@ -53,11 +54,12 @@ function fabricate(type, stack, source) {
  * Read directory and initialize javascript files.
  *
  * @param {String} filepath Full directory path.
+ * @param {Object} options
  * @return {Array} collection of constructors
  * @api private
  */
-function readSync(filepath, source) {
-  if (source) filepath = path.resolve(source, filepath);
+function read(filepath, options) {
+  if (options.source) filepath = path.resolve(options.source, filepath);
 
   //
   // Check if the provided string is a JS file.
@@ -67,7 +69,14 @@ function readSync(filepath, source) {
   ];
 
   //
-  // Read the directory synchronous, only process files.
+  // Recursion on directories not allowed, initialize the index.js file.
+  //
+  if (options.recursive === false) return [
+    init(filepath, path.basename(filepath, '.js'))
+  ];
+
+  //
+  // Read the directory, only process files.
   //
   return fs.readdirSync(filepath).map(function locate(file) {
     file = path.resolve(filepath, file);
@@ -85,19 +94,19 @@ function readSync(filepath, source) {
  *
  * @param {Function} traverse Recursive iterator, called on directories.
  * @param {Object} obj Original object, if set values are fetched by entity.
- * @param {String} source Optional absolute path to be used to resolve filepaths
+ * @param {Object} options
  * @return {Function} iterator
  * @api private
  */
-function iterator(traverse, obj, source) {
+function iterator(traverse, obj, options) {
   return function reduce(stack, entity) {
     var base = obj ? obj[entity] : entity
       , nojs = !js(base);
 
     //
-    // Run the sync functions, traverse will handle init.
+    // Run the functions, traverse will handle init.
     //
-    if (nojs) return stack.concat(traverse(base, source));
+    if (nojs) return stack.concat(traverse(base, options));
     return stack.concat(init(base, entity));
   };
 }
