@@ -8,16 +8,28 @@ var path = require('path')
  * asynchronously.
  *
  * @param {Mixed} stack String, array or object that contains constructible entities
- * @param {Function} done Completion callback.
+ * @param {String} source Optional absolute path to be used to resolve filepaths
+ * @param {Function} done Optional completion callback.
  * @return {Array} collection of constructors, if called synchronously.
  * @api public
  */
-module.exports = function fabricator(stack, done) {
+module.exports = function fabricator(stack, source, done) {
   var type = typeof stack;
   if ('object' === type && Array.isArray(stack)) type = 'array';
 
-  if ('function' !== typeof done) return fabricateSync(type, stack);
-  fabricate(type, stack, done);
+  //
+  // No source was provided, check if the call was asynchronous.
+  //
+  if ('function' === typeof source) {
+    done = source;
+    source = null;
+  }
+
+  //
+  // Call the fabricate function (a)synchronously.
+  //
+  if ('function' !== typeof done) return fabricateSync(type, stack, source);
+  fabricate(type, stack, source, done);
 };
 
 /**
@@ -25,21 +37,22 @@ module.exports = function fabricator(stack, done) {
  *
  * @param {String} type Typeof stack.
  * @param {Mixed} stack
+ * @param {String} source Optional absolute path to be used to resolve filepaths
  * @return {Array} filtered collection of constructible entities.
  * @api private
  */
-function fabricateSync(type, stack) {
+function fabricateSync(type, stack, source) {
   switch (type) {
     case 'string':
-      stack = readSync(stack);
+      stack = readSync(stack, source);
     break;
 
     case 'object':
-      stack = Object.keys(stack).reduce(iterator(readSync, stack), []);
+      stack = Object.keys(stack).reduce(iterator(readSync, stack, source), []);
     break;
 
     case 'array':
-      stack = stack.reduce(iterator(readSync), []);
+      stack = stack.reduce(iterator(readSync, source), []);
     break;
   }
 
@@ -51,21 +64,23 @@ function fabricateSync(type, stack) {
  *
  * @param {String} type Typeof stack.
  * @param {Mixed} stack
+ * @param {String} source Optional absolute path to be used to resolve filepaths
  * @param {Function} done Completion callback.
  * @api private
  */
-function fabricate(type, stack, done) {
+function fabricate(type, stack, source, done) {
   var result = [];
 
   switch (type) {
     case 'string':
-      read(stack, done);
+      read(stack, source, done);
     break;
 
     case 'object':
       Object.keys(stack).reduce(iterator(
         read,
         stack,
+        source,
         recur(Object.keys(stack).length, result, done)
       ), result);
     break;
@@ -74,6 +89,7 @@ function fabricate(type, stack, done) {
       stack.reduce(iterator(
         read,
         null,
+        source,
         recur(stack.length, result, done)
       ), result);
     break;
@@ -87,7 +103,9 @@ function fabricate(type, stack, done) {
  * @return {Array} collection of constructors
  * @api private
  */
-function readSync(filepath) {
+function readSync(filepath, source) {
+  if (source) filepath = path.resolve(source, filepath);
+
   //
   // Check if the provided string is a JS file.
   //
@@ -113,11 +131,14 @@ function readSync(filepath) {
  * Asynchronous read directory and initialize javascript files.
  *
  * @param {String} filepath Full directory path.
+ * @param {String} source Optional absolute path to be used to resolve filepaths
  * @param {done}
  * @api privat
  */
-function read(filepath, done) {
+function read(filepath, source, done) {
   var iterate;
+
+  if (source) filepath = path.resolve(source, filepath);
 
   //
   // Check if the provided string is a JS file.
@@ -150,11 +171,12 @@ function read(filepath, done) {
  *
  * @param {Function} traverse Recursive iterator, called on directories.
  * @param {Object} obj Original object, if set values are fetched by entity.
+ * @param {String} source Optional absolute path to be used to resolve filepaths
  * @param {Function} done Optional completion callback.
  * @return {Function} iterator
  * @api private
  */
-function iterator(traverse, obj, done) {
+function iterator(traverse, obj, source, done) {
   return function reduce(stack, entity) {
     var base = obj ? obj[entity] : entity
       , nojs = !js(base);
@@ -163,14 +185,14 @@ function iterator(traverse, obj, done) {
     // Run traverse function async, callback was provided, traverse will init.
     //
     if ('function' === typeof done) {
-      if (nojs) return traverse(base, done);
+      if (nojs) return traverse(base, source, done);
       return done(null, init(base, entity));
     }
 
     //
     // Run the sync functions, traverse will handle init.
     //
-    if (nojs) return stack.concat(traverse(base));
+    if (nojs) return stack.concat(traverse(base, source));
     return stack.concat(init(base, entity));
   };
 }

@@ -54,6 +54,22 @@ describe('Fabricator', function () {
     });
   });
 
+  it('can be provided with a absolute source path to resolve filepaths', function (done) {
+    var path = __dirname + '/fixtures'
+      , result = fabricator(fixtures.relative, path);
+
+    assume(result).to.be.an('array');
+    assume(result.length).to.equal(1);
+
+    fabricator(fixtures.relative, path, function (error, result) {
+      assume(error).to.equal(null);
+      assume(result).to.be.an('array');
+      assume(result.length).to.equal(1);
+
+      done();
+    });
+  });
+
   it('will discover constructors from objects', function (done) {
     var result = fabricator(fixtures.object);
 

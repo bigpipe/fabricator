@@ -9,6 +9,11 @@ exports.string = __dirname + '/constructor.js';
 exports.directory = __dirname + '/sub';
 
 //
+// Relative file path with can be resolved.
+//
+exports.relative = 'sub';
+
+//
 // Mix of types on array.
 //
 exports.array = [
