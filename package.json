@@ -1,7 +1,7 @@
 {
   "name": "fabricator",
   "version": "0.2.0",
-  "description": "Discover collections of constructable instances from strings (filepaths), arrays or objects",
+  "description": "Discover collections of constructible instances from strings (filepaths), arrays or objects",
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test ./node_modules/.bin/mocha $(find test -name '*.test.js')",

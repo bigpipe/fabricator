@@ -7,7 +7,7 @@ var path = require('path')
  * Expose small fabrication helper. Provide an optional callback to run the method
  * asynchronously.
  *
- * @param {Mixed} stack String, array or object that contains constructable entities
+ * @param {Mixed} stack String, array or object that contains constructible entities
  * @param {Function} done Completion callback.
  * @return {Array} collection of constructors, if called synchronously.
  * @api public
@@ -21,11 +21,11 @@ module.exports = function fabricator(stack, done) {
 };
 
 /**
- * Synchronous discover constructable entities.
+ * Synchronous discover constructible entities.
  *
  * @param {String} type Typeof stack.
  * @param {Mixed} stack
- * @return {Array} filtered collection of constructable entities.
+ * @return {Array} filtered collection of constructible entities.
  * @api private
  */
 function fabricateSync(type, stack) {
@@ -47,7 +47,7 @@ function fabricateSync(type, stack) {
 }
 
 /**
- * Asynchronously discover constructable entities.
+ * Asynchronously discover constructible entities.
  *
  * @param {String} type Typeof stack.
  * @param {Mixed} stack
@@ -102,7 +102,7 @@ function readSync(filepath) {
     file = path.resolve(filepath, file);
 
     //
-    // Only allow JS files, init determines if it is a constructable instance.
+    // Only allow JS files, init determines if it is a constructible instance.
     //
     if (!fs.statSync(file).isFile() || !js(file)) return;
     return init(file, path.basename(file, '.js'));
