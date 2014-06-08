@@ -139,7 +139,7 @@ function js(file) {
  */
 function init(constructor, name) {
   constructor = ('string' === typeof constructor) ? require(constructor) : constructor;
-  if (!constructor.prototype) return false;
+  if (!constructor.prototype) return;
 
   //
   // Sets the lowercase name on the prototype if required.
