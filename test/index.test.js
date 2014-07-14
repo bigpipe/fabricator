@@ -51,6 +51,14 @@ describe('Fabricator', function () {
     assume(result.length).to.equal(1);
   });
 
+  it('can read out sub directories', function () {
+    var path = __dirname + '/fixtures'
+      , result = fabricator(fixtures.nested);
+
+    assume(result).to.be.an('array');
+    assume(result.length).to.equal(2);
+  });
+
   it('will discover constructors from objects', function () {
     var result = fabricator(fixtures.object);
 

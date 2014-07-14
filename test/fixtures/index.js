@@ -9,6 +9,11 @@ exports.string = __dirname + '/constructor.js';
 exports.directory = __dirname + '/sub';
 
 //
+// Constructors in a nested/sub directory.
+//
+exports.nested = __dirname + '/nested';
+
+//
 // Relative file path with can be resolved.
 //
 exports.relative = 'sub';
