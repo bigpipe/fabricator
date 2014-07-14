@@ -63,10 +63,20 @@ function read(filepath, options) {
   return fs.readdirSync(filepath).map(function locate(file) {
     file = path.resolve(filepath, file);
 
+    var stat = fs.statSync(file);
+
+    if (stat.isDirectory() && fs.existsSync(path.join(file, 'index.js'))) {
+      //
+      // Use the directory name instead of `index` for name as it probably has
+      // more meaning then just `index` as a name.
+      //
+      return init(path.join(file, 'index.js'), path.basename(file, '.js'));
+    }
+
     //
     // Only allow JS files, init determines if it is a constructible instance.
     //
-    if (!fs.statSync(file).isFile() || !js(file)) return;
+    if (!stat.isFile() || !js(file)) return;
     return init(file, path.basename(file, '.js'));
   });
 }
