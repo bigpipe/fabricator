@@ -92,14 +92,13 @@ function read(filepath, options) {
  */
 function iterator(traverse, obj, options) {
   return function reduce(stack, entity) {
-    var base = obj ? obj[entity] : entity
-      , nojs = !js(base);
+    var base = obj ? obj[entity] : entity;
 
     //
     // Run the functions, traverse will handle init.
     //
-    if (nojs) return stack.concat(traverse(base, options));
-    return stack.concat(init(base, entity));
+    if (js(base)) return stack.concat(init(base, entity));
+    return stack.concat(traverse(base, options));
   };
 }
 
