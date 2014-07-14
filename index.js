@@ -50,7 +50,7 @@ function fabricate(type, stack, options) {
 }
 
 /**
- * Read directory and initialize javascript files.
+ * Read directory and initialize JavaScript files.
  *
  * @param {String} filepath Full directory path.
  * @param {Object} options
@@ -61,16 +61,9 @@ function read(filepath, options) {
   if (options.source) filepath = path.resolve(options.source, filepath);
 
   //
-  // Check if the provided string is a JS file.
+  // Check if the provided string is a JS file or when recursion is not allowed.
   //
-  if (js(filepath)) return [
-    init(filepath, path.basename(filepath, '.js'))
-  ];
-
-  //
-  // Recursion on directories not allowed, initialize the index.js file.
-  //
-  if (options.recursive === false) return [
+  if (js(filepath) || options.recursive === false) return [
     init(filepath, path.basename(filepath, '.js'))
   ];
 
