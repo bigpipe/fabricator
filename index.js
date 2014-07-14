@@ -6,19 +6,18 @@ var path = require('path')
 /**
  * Expose small fabrication helper.
  *
+ * Possible options:
+ *
+ *  - source:    {String}   Absolute path to be used to resolve file paths.
+ *  - recursive: {Boolean}  Should file paths be recursively discovered.
+ *
  * @param {Mixed} stack String, array or object that contains constructible entities
- * @param {Object} options
- *
- * Possible options
- *  - source:    {String}   Absolute path to be used to resolve filepaths
- *  - recursive: {Boolean}  Should file paths be recursively discovered
- *
+ * @param {Object} options Optional options.
  * @returns {Array} collection of constructors.
  * @api public
  */
 module.exports = function fabricator(stack, options) {
-  var type = typeof stack;
-  if ('object' === type && Array.isArray(stack)) type = 'array';
+  var type = Object.prototype.toString.call(stack).slice(8, -1).toLowerCase();
 
   return fabricate(type, stack, options || {});
 };
