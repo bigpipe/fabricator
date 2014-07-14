@@ -30,6 +30,11 @@ describe('Fabricator', function () {
     assume(result.length).to.equal(2);
   });
 
+  it('throws an error when we receive an invalid type', function (next) {
+    try { fabricator(new Date()); }
+    catch (e) { next(); }
+  });
+
   it('can be provided with a absolute source path to resolve filepaths', function () {
     var path = __dirname + '/fixtures'
       , result = fabricator(fixtures.relative, { source: path });
