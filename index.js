@@ -17,22 +17,9 @@ var path = require('path')
  * @api public
  */
 module.exports = function fabricator(stack, options) {
-  var type = Object.prototype.toString.call(stack).slice(8, -1).toLowerCase();
+  options = options || {};
 
-  return fabricate(type, stack, options || {});
-};
-
-/**
- * Discover constructible entities.
- *
- * @param {String} type Typeof stack.
- * @param {Mixed} stack
- * @param {Object} options
- * @return {Array} filtered collection of constructible entities.
- * @api private
- */
-function fabricate(type, stack, options) {
-  switch (type) {
+  switch (is(stack)) {
     case 'string':
       stack = read(stack, options);
     break;
@@ -44,17 +31,20 @@ function fabricate(type, stack, options) {
     case 'array':
       stack = stack.reduce(iterator(read, null, options), []);
     break;
+
+    default:
+      throw new Error('Unsupported type, cannot fabricate an: '+ is(stack));
   }
 
-  return stack.filter(Boolean);
-}
+  return (stack || []).filter(Boolean);
+};
 
 /**
  * Read directory and initialize JavaScript files.
  *
  * @param {String} filepath Full directory path.
- * @param {Object} options
- * @return {Array} collection of constructors
+ * @param {Object} options Additional configuration.
+ * @return {Array} collection of constructor
  * @api private
  */
 function read(filepath, options) {
@@ -112,10 +102,23 @@ function iterator(traverse, obj, options) {
  * @api private
  */
 function js(file) {
-  var extname = path.extname(file)
-    , type = typeof file;
+  var type = is(file);
 
-  return 'function' === type || 'string' === type && extname === '.js';
+  return 'function' === type
+  || 'string' === type && path.extname(file) === '.js';
+}
+
+/**
+ * A better alternative to `typeof` checks by trying to figure out the root
+ * class of things. This eliminates the needs for Array.is checks when the type
+ * is an object etc.
+ *
+ * @param {Mixed} obj Unknown thing we need to know.
+ * @returns {String}
+ * @api private
+ */
+function is(obj) {
+  return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
 }
 
 /**
@@ -130,7 +133,12 @@ function js(file) {
  * @api private
  */
 function init(constructor, name) {
-  constructor = ('string' === typeof constructor) ? require(constructor) : constructor;
+  constructor = ('string' === is(constructor)) ? require(constructor) : constructor;
+
+  //
+  // We really want to have a function/class here. Make sure that we can
+  // construct it using `new constructor`
+  //
   if (!constructor.prototype) return;
 
   //
