@@ -31,6 +31,17 @@ describe('Fabricator', function () {
     });
   });
 
+  it('transforms functions in to arrays', function () {
+    var result = fabricator(fixtures.fn);
+
+    assume(result).to.be.an('array');
+    assume(result.length).to.equal(1);
+
+    result.forEach(function (fn) {
+      assume(fn).to.be.a('function');
+    });
+  });
+
   it('will discover constructors in subdirectories and ignore other JS files', function () {
     var result = fabricator(fixtures.directory);
 

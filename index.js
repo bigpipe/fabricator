@@ -16,7 +16,7 @@ var path = require('path')
  * @returns {Array} collection of constructors.
  * @api public
  */
-module.exports = function fabricator(stack, options) {
+function fabricator(stack, options) {
   options = options || {};
 
   switch (is(stack)) {
@@ -33,11 +33,15 @@ module.exports = function fabricator(stack, options) {
     break;
 
     default:
-      throw new Error('Unsupported type, cannot fabricate an: '+ is(stack));
+      if ('function' !== typeof stack) {
+        throw new Error('Unsupported type, cannot fabricate an: '+ is(stack));
+      }
+
+      stack = [init(stack)];
   }
 
   return (stack || []).filter(Boolean);
-};
+}
 
 /**
  * Read directory and initialize JavaScript files.
@@ -48,6 +52,7 @@ module.exports = function fabricator(stack, options) {
  * @api private
  */
 function read(filepath, options) {
+  if ('string' !== is(filepath)) return fabricator(filepath, options);
   if (options.source) filepath = path.resolve(options.source, filepath);
 
   //
@@ -161,3 +166,8 @@ function init(constructor, name) {
 
   return constructor;
 }
+
+//
+// Expose the module.
+//
+module.exports = fabricator;

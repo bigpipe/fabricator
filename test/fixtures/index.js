@@ -19,6 +19,11 @@ exports.nested = __dirname + '/nested';
 exports.relative = 'sub';
 
 //
+// Just a simple function.
+//
+exports.fn = function nope() { /* noop */};
+
+//
 // Mix of types on array.
 //
 exports.array = [
@@ -33,4 +38,13 @@ exports.object = {
   Status: function Status() { /* noop */ },
   another: function Another() { /* noop */ },
   latest: exports.string
+};
+
+//
+// Mix of multiple things.
+//
+exports.objectarray = {
+  placeholder: [function Foo(){ /* noop */ }, function Bar() { /* noop */ }],
+  another: [exports.string, function Baz() { /* noop */ }],
+  last: [function Last(){ /* noop */ }]
 };
