@@ -14,6 +14,10 @@ describe('Fabricator', function () {
 
     assume(result).to.be.an('array');
     assume(result.length).to.equal(3);
+
+    result.forEach(function (fn) {
+      assume(fn).to.be.a('function');
+    });
   });
 
   it('can init constructors from file paths', function () {
@@ -21,6 +25,10 @@ describe('Fabricator', function () {
 
     assume(result).to.be.an('array');
     assume(result.length).to.equal(1);
+
+    result.forEach(function (fn) {
+      assume(fn).to.be.a('function');
+    });
   });
 
   it('will discover constructors in subdirectories and ignore other JS files', function () {
@@ -28,6 +36,10 @@ describe('Fabricator', function () {
 
     assume(result).to.be.an('array');
     assume(result.length).to.equal(2);
+
+    result.forEach(function (fn) {
+      assume(fn).to.be.a('function');
+    });
   });
 
   it('throws an error when we receive an invalid type', function (next) {
@@ -41,6 +53,10 @@ describe('Fabricator', function () {
 
     assume(result).to.be.an('array');
     assume(result.length).to.equal(2);
+
+    result.forEach(function (fn) {
+      assume(fn).to.be.a('function');
+    });
   });
 
   it('can be prevented from recursing a directory', function () {
@@ -49,6 +65,10 @@ describe('Fabricator', function () {
 
     assume(result).to.be.an('array');
     assume(result.length).to.equal(1);
+
+    result.forEach(function (fn) {
+      assume(fn).to.be.a('function');
+    });
   });
 
   it('can read out sub directories', function () {
@@ -57,6 +77,10 @@ describe('Fabricator', function () {
 
     assume(result).to.be.an('array');
     assume(result.length).to.equal(2);
+
+    result.forEach(function (fn) {
+      assume(fn).to.be.a('function');
+    });
   });
 
   it('will discover constructors from objects', function () {
@@ -64,6 +88,10 @@ describe('Fabricator', function () {
 
     assume(result).to.be.an('array');
     assume(result.length).to.equal(3);
+
+    result.forEach(function (fn) {
+      assume(fn).to.be.a('function');
+    });
   });
 
   it('will discover constructors from arrays', function () {
@@ -71,6 +99,10 @@ describe('Fabricator', function () {
 
     assume(result).to.be.an('array');
     assume(result.length).to.equal(3);
+
+    result.forEach(function (fn) {
+      assume(fn).to.be.a('function');
+    });
   });
 
   it('sets prototype.name to lowercase object key if prototype.name is falsy', function () {
