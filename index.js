@@ -103,6 +103,16 @@ function iterator(traverse, obj, options) {
     // Run the functions, traverse will handle init.
     //
     if (js(base)) return stack.concat(init(base, entity));
+
+    //
+    // When we've been supplied with an array as base assume we want to keep it
+    // as array and do not want it to be merged.
+    //
+    if (Array.isArray(base)) {
+      stack.push(traverse(base, options));
+      return stack;
+    }
+
     return stack.concat(traverse(base, options));
   };
 }

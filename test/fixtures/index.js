@@ -46,5 +46,6 @@ exports.object = {
 exports.objectarray = {
   placeholder: [function Foo(){ /* noop */ }, function Bar() { /* noop */ }],
   another: [exports.string, function Baz() { /* noop */ }],
-  last: [function Last(){ /* noop */ }]
+  last: [function Last(){ /* noop */ }],
+  latest: exports.string
 };

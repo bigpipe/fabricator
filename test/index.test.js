@@ -116,6 +116,24 @@ describe('Fabricator', function () {
     });
   });
 
+  it('will discover multiple constructors', function () {
+    var result = fabricator(fixtures.objectarray);
+
+    assume(result).to.be.an('array');
+    assume(result.length).to.equal(4);
+
+    var last = result.pop();
+    assume(last).to.be.a('function');
+
+    result.forEach(function (thing) {
+      assume(thing).to.be.a('array');
+
+      thing.forEach(function (fn) {
+        assume(fn).to.be.a('function');
+      });
+    });
+  });
+
   it('sets prototype.name to lowercase object key if prototype.name is falsy', function () {
     fixtures.object.Status.prototype.name = '';
     assume(fabricator(fixtures.object)[0].prototype.name).to.equal('status');
