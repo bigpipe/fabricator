@@ -132,6 +132,10 @@ describe('Fabricator', function () {
         assume(fn).to.be.a('function');
       });
     });
+
+    result[0].forEach(function (fn) {
+      assume(fn.prototype.name).to.equal('placeholder');
+    });
   });
 
   it('sets prototype.name to lowercase object key if prototype.name is falsy', function () {

@@ -1,3 +1,18 @@
+'use strict';
+
+/**
+ * Return a constructor with a name field.
+ *
+ * @returns {Function} created constructor;
+ * @api private
+ */
+function fn() {
+  function Y() { /* nope */ }
+  Y.prototype.name = '';
+
+  return Y;
+}
+
 //
 // Constructor inside JS file.
 //
@@ -21,13 +36,13 @@ exports.relative = 'sub';
 //
 // Just a simple function.
 //
-exports.fn = function nope() { /* noop */};
+exports.fn = fn();
 
 //
 // Mix of types on array.
 //
 exports.array = [
-  function Test() { /* noop */ },
+  fn(),
   exports.directory
 ];
 
@@ -35,8 +50,8 @@ exports.array = [
 // Mix of types on object.
 //
 exports.object = {
-  Status: function Status() { /* noop */ },
-  another: function Another() { /* noop */ },
+  Status: fn(),
+  another: fn(),
   latest: exports.string
 };
 
@@ -44,8 +59,8 @@ exports.object = {
 // Mix of multiple things.
 //
 exports.objectarray = {
-  placeholder: [function Foo(){ /* noop */ }, function Bar() { /* noop */ }],
-  another: [exports.string, function Baz() { /* noop */ }],
-  last: [function Last(){ /* noop */ }],
+  placeholder: [fn(), fn()],
+  another: [exports.string, fn()],
+  last: [fn()],
   latest: exports.string
 };

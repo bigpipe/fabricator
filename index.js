@@ -97,19 +97,25 @@ function read(filepath, options) {
  */
 function iterator(traverse, obj, options) {
   return function reduce(stack, entity) {
-    var base = obj ? obj[entity] : entity;
+    var base = obj ? obj[entity] : entity
+      , name = options.name || entity;
 
     //
     // Run the functions, traverse will handle init.
     //
-    if (js(base)) return stack.concat(init(base, entity));
+    if (js(base)) return stack.concat(init(base, 'string' === is(name)
+      ? name
+      : ''
+    ));
 
     //
     // When we've been supplied with an array as base assume we want to keep it
     // as array and do not want it to be merged.
     //
     if (Array.isArray(base)) {
+      options.name = name; // Force the name of the entry for all items in array.
       stack.push(traverse(base, options));
+
       return stack;
     }
 
