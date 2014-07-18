@@ -11,7 +11,6 @@ var path = require('path')
  *  - source:    {String}   Absolute path to be used to resolve file paths.
  *  - recursive: {Boolean}  Should file paths be recursively discovered.
  *  - name:      {String}   Force a name for a given constructor.
- *  - named:     {Boolean}  Only allow named constructors to be returned.
  *
  * @param {Mixed} stack String, array or object that contains constructible entities
  * @param {Object} options Optional options.
@@ -183,7 +182,7 @@ function init(constructor, name, options) {
   //
   if ('name' in constructor.prototype) {
     constructor.prototype.name = name.toString().toLowerCase();
-  } else return;
+  }
 
   return constructor;
 }
