@@ -1,3 +1,7 @@
-module.exports = module.exports = function Is() {
+function Is() {
   /* noop */
-};
+}
+
+Is.prototype.name = '';
+
+module.exports = Is;

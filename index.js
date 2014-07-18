@@ -11,6 +11,7 @@ var path = require('path')
  *  - source:    {String}   Absolute path to be used to resolve file paths.
  *  - recursive: {Boolean}  Should file paths be recursively discovered.
  *  - name:      {String}   Force a name for a given constructor.
+ *  - named:     {Boolean}  Only allow named constructors to be returned.
  *
  * @param {Mixed} stack String, array or object that contains constructible entities
  * @param {Object} options Optional options.
@@ -38,7 +39,7 @@ function fabricator(stack, options) {
         throw new Error('Unsupported type, cannot fabricate an: '+ is(stack));
       }
 
-      stack = [init(stack, options.name)];
+      stack = [init(stack, undefined, options)];
   }
 
   return (stack || []).filter(Boolean);
@@ -60,7 +61,7 @@ function read(filepath, options) {
   // Check if the provided string is a JS file or when recursion is not allowed.
   //
   if (js(filepath) || options.recursive === false) return [
-    init(filepath, options.name || path.basename(filepath, '.js'))
+    init(filepath, path.basename(filepath, '.js'), options)
   ];
 
   //
@@ -76,14 +77,15 @@ function read(filepath, options) {
       // Use the directory name instead of `index` for name as it probably has
       // more meaning then just `index` as a name.
       //
-      return init(path.join(file, 'index.js'), options.name || path.basename(file, '.js'));
+      return init(path.join(file, 'index.js'), path.basename(file, '.js'), options);
     }
 
     //
     // Only allow JS files, init determines if it is a constructible instance.
     //
     if (!stat.isFile() || !js(file)) return;
-    return init(file, options.name || path.basename(file, '.js'));
+
+    return init(file, path.basename(file, '.js'), options);
   });
 }
 
@@ -92,7 +94,7 @@ function read(filepath, options) {
  *
  * @param {Function} traverse Recursive iterator, called on directories.
  * @param {Object} obj Original object, if set values are fetched by entity.
- * @param {Object} options
+ * @param {Object} options Configuration.
  * @return {Function} iterator
  * @api private
  */
@@ -104,12 +106,11 @@ function iterator(traverse, obj, options) {
     //
     // Run the functions, traverse will handle init.
     //
-    if (js(base)) {
-      return stack.concat(init(base, options.name || 'string' === is(name)
-        ? name
-        : ''
-      ));
-    }
+    if (js(base)) return stack.concat(init(
+      base,
+      'string' === is(name) ? name : '',
+      options
+    ));
 
     //
     // When we've been supplied with an array as base assume we want to keep it
@@ -165,7 +166,7 @@ function is(obj) {
  * @returns {Object} initialized object
  * @api private
  */
-function init(constructor, name) {
+function init(constructor, name, options) {
   constructor = ('string' === is(constructor)) ? require(constructor) : constructor;
 
   //
@@ -174,14 +175,15 @@ function init(constructor, name) {
   //
   if (!constructor.prototype) return;
 
+  name = constructor.prototype.name || name || constructor.name;
+  if (options.name) name = options.name;
+
   //
   // Sets the lowercase name on the prototype if required.
   //
   if ('name' in constructor.prototype) {
-    constructor.prototype.name = (
-      constructor.prototype.name || name || constructor.name
-    ).toLowerCase();
-  }
+    constructor.prototype.name = name.toString().toLowerCase();
+  } else return;
 
   return constructor;
 }

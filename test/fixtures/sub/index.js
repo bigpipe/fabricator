@@ -1,7 +1,7 @@
-function Is() {
+function Index() {
   /* noop */
 }
 
-Is.prototype.name = '';
+Index.prototype.name = '';
 
-module.exports = Is;
+module.exports = Index;

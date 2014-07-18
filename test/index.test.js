@@ -28,6 +28,19 @@ describe('Fabricator', function () {
 
     result.forEach(function (fn) {
       assume(fn).to.be.a('function');
+      assume(fn.prototype.name).to.equal('with name');
+    });
+  });
+
+  it('can force a name on constructors', function () {
+    var result = fabricator(fixtures.string, { name: 'foo' });
+
+    assume(result).to.be.an('array');
+    assume(result.length).to.equal(1);
+
+    result.forEach(function (fn) {
+      assume(fn).to.be.a('function');
+      assume(fn.prototype.name).to.equal('foo');
     });
   });
 
@@ -71,8 +84,7 @@ describe('Fabricator', function () {
   });
 
   it('can be prevented from recursing a directory', function () {
-    var path = __dirname + '/fixtures'
-      , result = fabricator(fixtures.directory, { recursive: false });
+    var result = fabricator(fixtures.directory, { recursive: false });
 
     assume(result).to.be.an('array');
     assume(result.length).to.equal(1);
@@ -83,8 +95,7 @@ describe('Fabricator', function () {
   });
 
   it('can read out sub directories', function () {
-    var path = __dirname + '/fixtures'
-      , result = fabricator(fixtures.nested);
+    var result = fabricator(fixtures.nested);
 
     assume(result).to.be.an('array');
     assume(result.length).to.equal(2);
