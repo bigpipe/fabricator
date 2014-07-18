@@ -10,6 +10,7 @@ var path = require('path')
  *
  *  - source:    {String}   Absolute path to be used to resolve file paths.
  *  - recursive: {Boolean}  Should file paths be recursively discovered.
+ *  - name:      {String}   Force a name for a given constructor.
  *
  * @param {Mixed} stack String, array or object that contains constructible entities
  * @param {Object} options Optional options.
@@ -37,7 +38,7 @@ function fabricator(stack, options) {
         throw new Error('Unsupported type, cannot fabricate an: '+ is(stack));
       }
 
-      stack = [init(stack)];
+      stack = [init(stack, options.name)];
   }
 
   return (stack || []).filter(Boolean);
@@ -59,7 +60,7 @@ function read(filepath, options) {
   // Check if the provided string is a JS file or when recursion is not allowed.
   //
   if (js(filepath) || options.recursive === false) return [
-    init(filepath, path.basename(filepath, '.js'))
+    init(filepath, options.name || path.basename(filepath, '.js'))
   ];
 
   //
@@ -75,14 +76,14 @@ function read(filepath, options) {
       // Use the directory name instead of `index` for name as it probably has
       // more meaning then just `index` as a name.
       //
-      return init(path.join(file, 'index.js'), path.basename(file, '.js'));
+      return init(path.join(file, 'index.js'), options.name || path.basename(file, '.js'));
     }
 
     //
     // Only allow JS files, init determines if it is a constructible instance.
     //
     if (!stat.isFile() || !js(file)) return;
-    return init(file, path.basename(file, '.js'));
+    return init(file, options.name || path.basename(file, '.js'));
   });
 }
 
@@ -103,10 +104,12 @@ function iterator(traverse, obj, options) {
     //
     // Run the functions, traverse will handle init.
     //
-    if (js(base)) return stack.concat(init(base, 'string' === is(name)
-      ? name
-      : ''
-    ));
+    if (js(base)) {
+      return stack.concat(init(base, options.name || 'string' === is(name)
+        ? name
+        : ''
+      ));
+    }
 
     //
     // When we've been supplied with an array as base assume we want to keep it

@@ -59,7 +59,7 @@ exports.object = {
 // Mix of multiple things.
 //
 exports.objectarray = {
-  placeholder: [fn(), fn()],
+  placeholder: [fn(), fn(), exports.directory],
   another: [exports.string, fn()],
   last: [fn()],
   latest: exports.string
