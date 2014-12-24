@@ -66,6 +66,7 @@ function read(filepath, options) {
   //
   // Read the directory, only process files.
   //
+  if (!fs.existsSync(filepath)) return false;
   return fs.readdirSync(filepath).map(function locate(file) {
     file = path.resolve(filepath, file);
 
