@@ -104,13 +104,21 @@ function iterator(traverse, obj, options) {
       , name = options.name || entity;
 
     //
+    // Fabricated objects should provide each constructor with the name
+    // of its property on the original object.
+    //
+    if (obj) options.name = entity;
+
+    //
     // Run the functions, traverse will handle init.
     //
-    if (js(base)) return stack.concat(init(
-      base,
-      'string' === is(name) ? name : '',
-      options
-    ));
+    if (js(base)) {
+      return stack.concat(init(
+        base,
+        'string' === is(name) ? name : '',
+        options
+      ));
+    }
 
     //
     // When we've been supplied with an array as base assume we want to keep it
@@ -182,7 +190,8 @@ function init(constructor, name, options) {
   // Sets the lowercase name on the prototype if required.
   //
   if ('name' in constructor.prototype) {
-    constructor.prototype.name = name.toString().toLowerCase();
+    name = name.toString();
+    constructor.prototype.name = name[0].toLowerCase() + name.slice(1);
   }
 
   return constructor;
