@@ -1,8 +1,11 @@
-# Fabricator [![Build Status][status]](https://travis-ci.org/bigpipe/fabricator) [![NPM version][npmimgurl]](http://badge.fury.io/js/fabricator) [![Coverage Status][coverage]](http://coveralls.io/r/bigpipe/fabricator?branch=master)
+# Fabricator
 
-[status]: https://travis-ci.org/bigpipe/fabricator.png
-[npmimgurl]: https://badge.fury.io/js/fabricator.png
-[coverage]: http://coveralls.io/repos/bigpipe/fabricator/badge.png?branch=master
+[![Version npm][version]](http://browsenpm.org/package/fabricator)[![Build Status][build]](https://travis-ci.org/bigpipe/fabricator)[![Dependencies][david]](https://david-dm.org/bigpipe/fabricator)[![Coverage Status][cover]](https://coveralls.io/r/bigpipe/fabricator?branch=master)
+
+[version]: http://img.shields.io/npm/v/fabricator.svg?style=flat-square
+[build]: http://img.shields.io/travis/bigpipe/fabricator/master.svg?style=flat-square
+[david]: https://img.shields.io/david/bigpipe/fabricator.svg?style=flat-square
+[cover]: http://img.shields.io/coveralls/bigpipe/fabricator/master.svg?style=flat-square
 
 Discover collections of constructible instances from strings (filepaths),
 arrays or objects. Fabricator is a small helper module which does nothing
