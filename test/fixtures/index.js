@@ -7,7 +7,7 @@
  * @api private
  */
 function fn() {
-  function Y() { /* nope */ }
+  function Y(x, y) { x = y; }
   Y.prototype.name = '';
 
   return Y;

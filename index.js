@@ -1,6 +1,7 @@
 'use strict';
 
-var path = require('path')
+var empty = require('is-empty')
+  , path = require('path')
   , fs = require('fs');
 
 /**
@@ -19,6 +20,11 @@ var path = require('path')
  */
 function fabricator(stack, options) {
   options = options || {};
+
+  //
+  // Empty strings, arrays or objects should not be processed, return early.
+  //
+  if (empty(stack)) return [];
 
   switch (is(stack)) {
     case 'string':

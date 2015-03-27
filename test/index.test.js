@@ -20,6 +20,13 @@ describe('Fabricator', function () {
     });
   });
 
+  it('returns early if the stack is empty or falsy', function () {
+    var result = fabricator([false]);
+
+    assume(result).to.be.an('array');
+    assume(result.length).to.equal(0);
+  });
+
   it('can init constructors from file paths', function () {
     var result = fabricator(fixtures.string);
 
@@ -67,7 +74,7 @@ describe('Fabricator', function () {
   });
 
   it('throws an error when we receive an invalid type', function (next) {
-    try { fabricator(new Date()); }
+    try { fabricator(Date.now()); }
     catch (e) { next(); }
   });
 
