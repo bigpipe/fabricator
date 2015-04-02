@@ -193,11 +193,10 @@ function init(constructor, name, options) {
   if (options.name) name = options.name;
 
   //
-  // Sets the lowercase name on the prototype if required.
+  // Sets the name on the prototype to a string.
   //
   if ('name' in constructor.prototype) {
-    name = name.toString();
-    constructor.prototype.name = name[0].toLowerCase() + name.slice(1);
+    constructor.prototype.name = name.toString();
   }
 
   return constructor;

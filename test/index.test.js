@@ -156,9 +156,9 @@ describe('Fabricator', function () {
     });
   });
 
-  it('sets prototype.name to lowercase object key if prototype.name is falsy', function () {
-    fixtures.object.Status.prototype.name = '';
-    assume(fabricator(fixtures.object)[0].prototype.name).to.equal('status');
+  it('sets prototype.name to the stringified object key if prototype.name is falsy', function () {
+    fixtures.object[1].prototype.name = '';
+    assume(fabricator(fixtures.object)[0].prototype.name).to.equal('1');
   });
 
   it('sets prototype.name to filename if prototype.name is falsy', function () {

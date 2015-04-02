@@ -50,7 +50,7 @@ exports.array = [
 // Mix of types on object.
 //
 exports.object = {
-  Status: fn(),
+  1: fn(),
   another: fn(),
   latest: exports.string
 };
