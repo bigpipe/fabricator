@@ -1,7 +1,6 @@
 'use strict';
 
-var empty = require('is-empty')
-  , path = require('path')
+var path = require('path')
   , fs = require('fs');
 
 /**
@@ -167,6 +166,22 @@ function js(file) {
  */
 function is(obj) {
   return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
+}
+
+/**
+ * Simple check to see if the provided stack is empty or falsy.
+ *
+ * @param {Mixed} value Entity to check
+ * @return {Boolean} result of check
+ * @api private
+ */
+function empty(value) {
+  if (!value) return true;
+  switch (is(value)) {
+    case "object": return !Object.keys(value).length;
+    case "array": return !value.length;
+    default: return !value;
+  }
 }
 
 /**
